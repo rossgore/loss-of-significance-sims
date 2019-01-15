@@ -1,0 +1,46 @@
+Collective Loss of Significance Parameters - see src/RunSimulation.java
+
+questValueDistributionMean - The mean value of the normal distribution specifying a quest value for an agent. Minimum quest value is 0 and maximum value is 1.
+
+questValueDistributionSD - The standard deviation of the normal distribution specifying a quest value for an agent. Minimum quest value is 0 and maximum value is 1.
+
+questThresholdDistributionMean - The mean value of the normal distribution specifying a quest threshold value for an agent. Minimum quest threshold value is 0 and maximum value is 1.
+
+questThresholdDistributionSD - The standard deviation of the normal distribution specifying a quest threshold value for an agent. Minimum quest threshold value is 0 and maximum value is 1.
+
+ideologyValueDistributionMean - The mean value of the normal distribution specifying an ideology value for an agent. Minimum ideology value is 0 and maximum value is 1. According to model description this distribution should be right-skewed.
+
+ideologyValueDistributionSD - The standard deviation of the normal distribution specifying an ideology value for an agent. Minimum ideology value is 0 and maximum value is 1. According to model description this distribution should be right-skewed.
+
+threatSuspectibilityDistributionMean - The mean value of the normal distribution specifying the threat suspectibility value for an agent. Minimum threat suspectibility value is 0 and maximum value is 1.
+
+threatSuspectibilityDistributionSD - The standard deviation of the normal distribution specifying the threat suspectibility value for an agent. Minimum threat suspectibility value is 0 and maximum value is 1.
+
+numberOfAgents - The number of agents in the model. In order to generate realistic social networks the minimum number of agents to simulate is 500 and the maximum is 20,000.
+
+nmberOfTimeSteps - The number of time steps in the model. The minimum number of time steps is 1 and the maximum number of time steps is 100,000.
+
+networkHomophily - The extent to which the social networks the agents are placed in are homophilous with regard to ideology (ideology value < 0.5 is non-violent; ideology value > 0.5 is violent). The minimum value is 0 and the maximum value is 1.
+
+extremeIdeologyThreshold - The polar cutoffs to determine extreme agents with extreme ideology. For non-violent agents the extreme threshold is determined by: 0 to extremeIdeologyThreshold. For violent agents the extreme threshold is determined by: 1 to (1-extremeIdeologyThreshold).
+
+corrBetweenIdeologyAndQuestValue - The correlation extent to which an individual's ideology is extreme (close to 0 and close to 1)  and the quest value of the agent. This value can range between -1 and 1.
+
+onQuestNetworkInfluence - The overall influence an agent's social network has on their ideology in a given time step when they are on a quest (their quest value is greater than their quest threshold value). This value can range between 0 and 1.
+
+nonQuestNetworkInfluence - The overall influence an agent's social network has on their ideology and their quest value in a given time step whenthey are not on a quest (their quest value is not greater than their quest threshold value). This value can range between 0 and 1.
+
+onQuestStepSignficanceReduction - The reduction in the quest value of an agent each time step that they are on a quest (their quest value is greater than their quest threshold value). This value can range between 0 and 1.
+
+ifOnQuestInfluenceOfExtremeAgent - The influence an agent with an extreme ideology has on an agent in their social who is on a quest (their quest value is not greater than their quest threshold value). This value can range between 0 and 1.
+
+ifOnQuestInfluenceOfSameIdeologyAgent - The influence an agent of the same ideology has on an agent in their social who is on a quest (their quest value is not greater than their quest threshold value). This value can range between 0 and 1.
+
+ifOnQuestInfluenceOfSameIdeologyAgent - The influence an agent with a violent ideology (ideology value > 0.5) has on an agent in their social who is on a quest (their quest value is not greater than their quest threshold value). This value can range between 0 and 1.
+
+
+lossEvents - a list of all collective loss events to simulate
+ * each loss event is given a time stamp to indicate when it occurs and an intensity level.
+ * the intensity level reflect the extent to which each agent's quest value will be raised.
+ * the minimum value for a time stamp of a collective loss event is 1 and the maximum value is nmberOfTimeSteps. 
+ * the minimum value of an intensity level of a collective loss event is 0 and the maximum value is 1.
