@@ -4,7 +4,7 @@ These models reflect the loss of significance work from the MOTIVATED COGNITION 
 
 A description of these models is in the description-of-sims folder.
 
-Information about the parameters for each model can be found in the PARAMETERS folder for the respective model (java/CollectiveLossOfSignificance or java/IndividualLossOfSignificance)
+Information about the parameters for each model can be found in the Parameter-Descriptions file for the respective model (java/CollectiveLossOfSignificance or java/IndividualLossOfSignificance)
 Compiling and running the models
 
 The models are written in the JAVA programming language and use the external libraries provided in the libs folder. Thus compiling and running the models requires the JAVA Development Kit (JDK) to be installed on one's computer.
