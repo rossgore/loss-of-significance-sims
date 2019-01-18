@@ -2,13 +2,16 @@ import java.util.ArrayList;
 
 public class InputParameterSet {
 	
-	private double corrBetweenIdeologyAndQuestValue  = 1.0;
-	private double onQuestNetworkInfluence = 0.10;
-	private double nonQuestNetworkInfluence = 0.025;
-	private double onQuestStepSignficanceReduction = 0.001;
-	private double ifOnQuestInfluenceOfExtremeAgent = 1.0;
-	private double ifOnQuestInfluenceOfSameIdeologyAgent = 1.0;
-	private double ifOnQuestInfluenceOfViolentAgent = 1.0;
+	private double corrBetweenViolentIdeologyAndQuestValue;
+	private double corrBetweenNonViolentIdeologyAndQuestValue;
+	
+	private double onQuestNetworkInfluence;
+	private double nonQuestNetworkInfluence;
+	
+	private double onQuestStepSignficanceReduction;
+	private double ifOnQuestInfluenceOfExtremeAgent;
+	private double ifOnQuestInfluenceOfSameIdeologyAgent;
+	private double ifOnQuestInfluenceOfViolentAgent;
 	
 	private double questValueDistributionMean;
 	private double questValueDistributionSD;
@@ -26,42 +29,18 @@ public class InputParameterSet {
 	private int numberOfTimeSteps;
 	
 	private double networkHomophily;
-	private double extremeIdeologyThreshold = 0.1;
+	private double extremeIdeologyThreshold;
+	
+	private double individualLossEventFrequency;
+	private double individualLossEventDistributionMean;
+	private double individualLossEventDistributionSD;
+	private double nonLossEventQuestValueReduction;
 	
 	private ArrayList<CollectiveLossEvent> lossEventList;
 	
-	public InputParameterSet()
-	{
-		corrBetweenIdeologyAndQuestValue  = 1.0;
-		onQuestNetworkInfluence = 0.10;
-		nonQuestNetworkInfluence = 0.025;
-		onQuestStepSignficanceReduction = 0.001;
-		ifOnQuestInfluenceOfExtremeAgent = 1.0;
-		ifOnQuestInfluenceOfSameIdeologyAgent = 1.0;
-		ifOnQuestInfluenceOfViolentAgent = 1.0;
-		
-		questValueDistributionMean = 0.50;
-		questValueDistributionSD = 0.15;
-		
-		questThresholdDistributionMean = 0.75;
-		questThresholdDistributionSD = 0.05;
-		
-		ideologyValueDistributionMean = 0.58;
-		ideologyValueDistributionSD = 0.15;
-		
-		threatSuspectibilityDistributionMean = 0.50;
-		threatSuspectibilityDistributionSD = 0.15;
-		
-		numberOfAgents = 750;
-		numberOfTimeSteps = 1000;
-		
-		networkHomophily = 0.8;
-		extremeIdeologyThreshold = 0.1;
-		
-		lossEventList = new ArrayList<CollectiveLossEvent>();
-	}
 	
-	public InputParameterSet(double pCorrBetweenIdeologyAndQuestValue,
+	public InputParameterSet(double pCorrBetweenViolentIdeologyAndQuestValue,
+			double pCorrBetweenNonViolentIdeologyAndQuestValue,
 			double pOnQuestNetworkInfluence,
 			double pNonQuestNetworkInfluence,
 			double pOnQuestStepSignficanceReduction,
@@ -80,9 +59,14 @@ public class InputParameterSet {
 			int pNmberOfTimeSteps,
 			double pNetworkHomophily,
 			double pExtremeIdeologyThreshold,
+			double pIndividualLossEventFrequency,
+			double pIndividualLossEventDistributionMean,
+			double pIndividualLossEventDistributionSD,
+			double pNonLossEventQuestValueReduction,
 			ArrayList<CollectiveLossEvent> pLossEventList)
 	{
-		corrBetweenIdeologyAndQuestValue  = pCorrBetweenIdeologyAndQuestValue;
+		setCorrBetweenViolentIdeologyAndQuestValue(pCorrBetweenViolentIdeologyAndQuestValue);
+		setCorrBetweenNonViolentIdeologyAndQuestValue(pCorrBetweenNonViolentIdeologyAndQuestValue);
 		onQuestNetworkInfluence = pOnQuestNetworkInfluence;
 		nonQuestNetworkInfluence = pNonQuestNetworkInfluence;
 		onQuestStepSignficanceReduction = pOnQuestStepSignficanceReduction;
@@ -108,15 +92,15 @@ public class InputParameterSet {
 		networkHomophily = pNetworkHomophily;
 		extremeIdeologyThreshold = pExtremeIdeologyThreshold;
 		
+		individualLossEventFrequency = pIndividualLossEventFrequency;
+		individualLossEventDistributionMean = pIndividualLossEventDistributionMean;
+		individualLossEventDistributionSD = pIndividualLossEventDistributionSD;
+		setNonLossEventQuestValueReduction(pNonLossEventQuestValueReduction);
+		
 		lossEventList = pLossEventList;
 	}
 	
-	public double getCorrBetweenIdeologyAndQuestValue() {
-		return corrBetweenIdeologyAndQuestValue;
-	}
-	public void setCorrBetweenIdeologyAndQuestValue(double pCorrBetweenIdeologyAndQuestValue) {
-		this.corrBetweenIdeologyAndQuestValue = pCorrBetweenIdeologyAndQuestValue;
-	}
+
 	public double getQuestValueDistributionMean() {
 		return questValueDistributionMean;
 	}
@@ -236,6 +220,55 @@ public class InputParameterSet {
 
 	public void setLossEventList(ArrayList<CollectiveLossEvent> pLossEventList) {
 		this.lossEventList = pLossEventList;
+	}
+
+	public double getCorrBetweenViolentIdeologyAndQuestValue() {
+		return corrBetweenViolentIdeologyAndQuestValue;
+	}
+
+	public void setCorrBetweenViolentIdeologyAndQuestValue(double pCorrBetweenViolentIdeologyAndQuestValue) {
+		this.corrBetweenViolentIdeologyAndQuestValue = pCorrBetweenViolentIdeologyAndQuestValue;
+	}
+
+	public double getCorrBetweenNonViolentIdeologyAndQuestValue() {
+		return corrBetweenNonViolentIdeologyAndQuestValue;
+	}
+
+	public void setCorrBetweenNonViolentIdeologyAndQuestValue(double pCorrBetweenNonViolentIdeologyAndQuestValue) {
+		this.corrBetweenNonViolentIdeologyAndQuestValue = pCorrBetweenNonViolentIdeologyAndQuestValue;
+	}
+
+	public double getIndividualLossEventDistributionMean() {
+		return individualLossEventDistributionMean;
+	}
+
+	public void setIndividualLossEventDistributionMean(double pIndividualLossEventDistributionMean) {
+		this.individualLossEventDistributionMean = pIndividualLossEventDistributionMean;
+	}
+
+	public double getIndividualLossEventDistributionSD() {
+		return individualLossEventDistributionSD;
+	}
+
+	public void setIndividualLossEventDistributionSD(double pIndividualLossEventDistributionSD) {
+		this.individualLossEventDistributionSD = pIndividualLossEventDistributionSD;
+	}
+
+	public double getIndividualLossEventFrequency() {
+		return individualLossEventFrequency;
+	}
+
+	public void setIndividualLossEventFrequency(double pIndividualLossEventFrequency) {
+		this.individualLossEventFrequency = pIndividualLossEventFrequency;
+	}
+
+
+	public double getNonLossEventQuestValueReduction() {
+		return nonLossEventQuestValueReduction;
+	}
+
+	public void setNonLossEventQuestValueReduction(double pNonLossEventQuestValueReduction) {
+		this.nonLossEventQuestValueReduction = pNonLossEventQuestValueReduction;
 	}
 
 }

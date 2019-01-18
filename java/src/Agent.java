@@ -7,8 +7,6 @@ public class Agent {
 	public static final double NONVIOLENT = 0;
 	public static final double VIOLENT = 1;
 	public static final double NEUTRAL = 0.5;
-	
-
 
 	/**
 	 * Agents start with some initial value of a quest for significance. 
@@ -38,8 +36,6 @@ public class Agent {
 
 	public boolean isIdeologyViolent()
 	{
-		//System.out.println("Comparing " + ideology + " to "+NEUTRAL);
-		//System.out.println("returning: "+(ideology > NEUTRAL));
 		return ideology > NEUTRAL;
 	}
 
@@ -54,21 +50,24 @@ public class Agent {
 	}
 
 	public Agent(NormalDistribution questForSignficanceValDist, NormalDistribution questForSignificanceThresholdDist, 
-			NormalDistribution ideologyValueDist, NormalDistribution threatSuspectibilityDist, double corrSigIdeology)
+			NormalDistribution ideologyValueDist, NormalDistribution threatSuspectibilityDist, 
+			double corrSigNonViolentIdeology, double corrSigViolentIdeology)
 	{
 		this.setQuestForSignificanceThreshold(questForSignificanceThresholdDist.sample());
 		this.setThreatSuspectibility(threatSuspectibilityDist.sample());
 		this.setIdeologyValueOfNetwork(ideologyValueDist.getMean());
 		this.setQuestValueOfNetwork(questForSignficanceValDist.getMean());
-		if (Math.random() < ideologyValueDist.getMean())
+
+		double pickAgentIdeology = ideologyValueDist.sample();
+		if (pickAgentIdeology > Agent.NEUTRAL)
 		{
-			CorrelatedVectors correlatedValues= new CorrelatedVectors(questForSignficanceValDist, corrSigIdeology, true);
+			CorrelatedVectors correlatedValues= new CorrelatedVectors(questForSignficanceValDist, corrSigViolentIdeology, true);
 			this.setQuestForSignficanceValue(correlatedValues.getSignficanceValue());
 			this.setIdeology(correlatedValues.getIdeologyValue());
 		}
 		else
 		{
-			CorrelatedVectors correlatedValues= new CorrelatedVectors(questForSignficanceValDist, corrSigIdeology, false);
+			CorrelatedVectors correlatedValues= new CorrelatedVectors(questForSignficanceValDist, corrSigNonViolentIdeology, false);
 			this.setQuestForSignficanceValue(correlatedValues.getSignficanceValue());
 			this.setIdeology(correlatedValues.getIdeologyValue());
 		}
@@ -181,12 +180,12 @@ public class Agent {
 						totalWeightOfConnections += Math.max(Simulation.IF_ON_QUEST_INFLUENCE_OF_EXTREME_AGENT,
 								network[i]);
 					}
-					else if (agentList.get(i).isIdeologyViolent())
+					if (agentList.get(i).isIdeologyViolent())
 					{
 						totalWeightOfConnections += Math.max(Simulation.IF_ON_QUEST_INFLUENCE_OF_VIOLENT_AGENT,
 								network[i]);
 					}
-					else if (sameIdeology)
+					if (sameIdeology)
 					{
 						totalWeightOfConnections += Math.max(Simulation.IF_ON_QUEST_INFLUENCE_OF_SAME_IDEOLOGY_AGENT,
 								network[i]);
@@ -207,28 +206,23 @@ public class Agent {
 					double influenceValue=0;
 					if (agentList.get(i).isExtreme())
 					{
-						influenceValue = Math.max(Simulation.IF_ON_QUEST_INFLUENCE_OF_EXTREME_AGENT,
-								network[i]);
+						influenceValue += Simulation.IF_ON_QUEST_INFLUENCE_OF_EXTREME_AGENT;
 					}
-					else if (agentList.get(i).isIdeologyViolent())
+					if (agentList.get(i).isIdeologyViolent())
 					{
-						influenceValue = Math.max(Simulation.IF_ON_QUEST_INFLUENCE_OF_VIOLENT_AGENT,
-								network[i]);
+						influenceValue += Simulation.IF_ON_QUEST_INFLUENCE_OF_VIOLENT_AGENT;
 					}
-					else if (sameIdeology)
+					if (sameIdeology)
 					{
-						influenceValue = Math.max(Simulation.IF_ON_QUEST_INFLUENCE_OF_SAME_IDEOLOGY_AGENT,
-								network[i]);
+						influenceValue += Simulation.IF_ON_QUEST_INFLUENCE_OF_SAME_IDEOLOGY_AGENT;
 					}
 					else
 					{
-						influenceValue = network[i];
+						influenceValue += network[i];
 					}
-					questValueInfluence += agentList.get(i).getQuestForSignficanceValue()*(influenceValue/totalWeightOfConnections);
 					ideologyValueInfluence += agentList.get(i).getIdeology()*(influenceValue/totalWeightOfConnections);
 				}
 			}
-			this.setIdeologyValueOfNetwork(ideologyValueInfluence);
 			this.setQuestValueOfNetwork(questValueInfluence);
 		}
 		else
@@ -255,10 +249,8 @@ public class Agent {
 		this.setQuestValueOfNetwork(questValueInfluence);
 	}
 
-
-	public void updateAgentAttributes(double networkInfluence)
+	public void updateAgentQuestValue(double increment)
 	{
-		double newIdeologyValue;
 		double newQuestValue;
 		if (this.isOnQuest())
 		{
@@ -267,14 +259,18 @@ public class Agent {
 		}
 		else
 		{
-			 newQuestValue = Math.pow(this.getQuestForSignficanceValue(), (1-networkInfluence))*
-					Math.pow(this.getQuestValueOfNetwork(), networkInfluence);
+			newQuestValue = this.getQuestForSignficanceValue()+increment;
 		}
-			 newIdeologyValue = Math.pow(this.getIdeology(), (1-networkInfluence))*
-					Math.pow(this.getIdeologyValueOfNetwork(), networkInfluence);
-		
-
 		this.setQuestForSignficanceValue(newQuestValue);
+	}
+
+	public void updateAgentIdeology(double networkInfluence)
+	{
+		double newIdeologyValue;
+
+		newIdeologyValue = Math.pow(this.getIdeology(), (1-networkInfluence))*
+				Math.pow(this.getIdeologyValueOfNetwork(), networkInfluence);
+
 		this.setIdeology(newIdeologyValue);
 	}
 

@@ -12,19 +12,28 @@ public class Simulation {
 	public static double IF_ON_QUEST_INFLUENCE_OF_VIOLENT_AGENT;
 	public static double EXTREME_THRESHOLD;
 
+	private ArrayList<CollectiveLossEvent> collectiveLossEventSchedule;
+
 	private ArrayList<Agent> agents;
 
 	private NormalDistribution questValueDistribution;
 	private NormalDistribution questThresholdDistribution;
 	private NormalDistribution ideologyValueDistribution;
+	private NormalDistribution threatSuspectibilityDistribution;
+
 	private SocialNetwork sn;
 
 	private int numberOfAgents;
 	private int numberOfTimeSteps;
 	private double networkHomophily;
 
+	private IndividualLossEvent individualLossEvent;
+	private double individualLossEventFrequency;
+	private double nonLossEventQuestValueReduction;
+
 	public Simulation(InputParameterSet input)
 	{
+
 		long seed = 12;
 		String ego_type = "Ego";
 		double[] ego_params = {input.getNumberOfAgents()};
@@ -56,19 +65,25 @@ public class Simulation {
 		double ideologyValueSD = input.getIdeologyValueDistributionSD();
 		ideologyValueDistribution = new NormalDistribution(ideologyValueMean, ideologyValueSD);
 
+		double theatSuspectibilityValueMean = input.getThreatSuspectibilityDistributionMean();
+		double theatSuspectibilityValueSD = input.getThreatSuspectibilityDistributionSD();
+		threatSuspectibilityDistribution = new NormalDistribution(theatSuspectibilityValueMean, theatSuspectibilityValueSD);
+		
+		individualLossEvent = new IndividualLossEvent(input.getIndividualLossEventDistributionMean(), 
+				input.getIndividualLossEventDistributionSD());
+		
+		individualLossEventFrequency = input.getIndividualLossEventFrequency();
+		nonLossEventQuestValueReduction = input.getNonLossEventQuestValueReduction();
+		
+		collectiveLossEventSchedule = input.getLossEventList();
 
 		for (int i=0; i<numberOfAgents; i++)
 		{
 			Agent toInit = new Agent(questValueDistribution, questThresholdDistribution, 
-					ideologyValueDistribution, input.getCorrBetweenIdeologyAndQuestValue());
-			if (i % 100 == 0)
-			{
-				/**
-				System.out.println("Ideology Value: "+toInit.getIdeology());
-				System.out.println("Quest Value: "+toInit.getQuestForSignficanceValue());
-				System.out.println();
-				 **/
-			}
+					ideologyValueDistribution, threatSuspectibilityDistribution,
+					input.getCorrBetweenNonViolentIdeologyAndQuestValue(), 
+					input.getCorrBetweenViolentIdeologyAndQuestValue());
+
 			toInit.setId(i);
 			agents.add(toInit);
 		}
@@ -100,26 +115,79 @@ public class Simulation {
 		return agents;
 	}
 
-	public int getNumberOfTimeSteps()
+	public CollectiveLossEvent getLossEvent(int curStep)
 	{
-		return this.numberOfTimeSteps;
+		CollectiveLossEvent toReturn = null;
+		for (int i=0; i<this.getCollectiveLossEventSchedule().size(); i++)
+		{
+			CollectiveLossEvent event = this.getCollectiveLossEventSchedule().get(i);
+			if (event.getTimeStep() == curStep)
+			{
+				toReturn = event;
+			}
+		}
+		return toReturn;
 	}
 
-	public void step()
+	public boolean isCollectiveLossStep (int curStep)
 	{
+		boolean answer = false;
+		for (int i=0; i<this.getCollectiveLossEventSchedule().size(); i++)
+		{
+			CollectiveLossEvent event = this.getCollectiveLossEventSchedule().get(i);
+			if (event.getTimeStep() == curStep)
+			{
+				answer = true;
+			}
+		}
+		return answer;
+	}
+
+	public void step(int timeStep)
+	{
+		// collective loss events
+		if (this.isCollectiveLossStep(timeStep))
+		{
+			CollectiveLossEvent event = this.getLossEvent(timeStep);
+			for (int i=0; i<agents.size(); i++)
+			{
+				/**
+				 * CHECK IF THIS IS RIGHT WITH GROUP.
+				 */
+				double incAgentQuestValue = event.getIncToQuestValue(agents.get(i).getThreatSuspectibility());
+				agents.get(i).updateAgentQuestValue(incAgentQuestValue);
+			}
+		}
+		// individual loss events
+		for (int i=0; i<agents.size(); i++)
+		{
+			// if event doesn't happen it is relaxing
+			double incAgentQuestValue = -1 * this.getNonLossEventQuestValueReduction();
+			
+			// if event does happen it increases quest
+			if (Math.random() < this.getIndividualLossEventFrequency())
+			{
+				incAgentQuestValue = this.getIndividualLossEvent().getLossEventIntensity();
+			}
+			agents.get(i).updateAgentQuestValue(incAgentQuestValue);
+		}
+		
+		// time step socialization
 		for (int i=0; i<agents.size(); i++)
 		{
 			agents.get(i).beSocial(agents);
 		}
+		
+		// update ideology based on socialization
 		for (int i=0; i<agents.size(); i++)
 		{
 			if (agents.get(i).isOnQuest())
 			{
-				agents.get(i).updateAgentAttributes(ON_QUEST_NETWORK_INFLUENCE);
+				agents.get(i).updateAgentIdeology(ON_QUEST_NETWORK_INFLUENCE);
 			}
 			else
 			{
-				agents.get(i).updateAgentAttributes(NON_QUEST_NETWORK_INFLUENCE);
+				agents.get(i).updateAgentIdeology(NON_QUEST_NETWORK_INFLUENCE);
 			}
 
 		}
@@ -172,5 +240,29 @@ public class Simulation {
 		}
 		return count;
 	}
+
+	public ArrayList<CollectiveLossEvent> getCollectiveLossEventSchedule() {
+		return collectiveLossEventSchedule;
+	}
+
+	public int getNumberOfTimeSteps()
+	{
+		return this.numberOfTimeSteps;
+	}
+
+	public IndividualLossEvent getIndividualLossEvent() {
+		return individualLossEvent;
+	}
+	
+	public double getIndividualLossEventFrequency()
+	{
+		return this.individualLossEventFrequency;
+	}
+	
+	public double getNonLossEventQuestValueReduction()
+	{
+		return this.nonLossEventQuestValueReduction;
+	}
+
 
 }

@@ -13,11 +13,11 @@ public class CorrelatedVectors {
 	private double signficanceValue;
 	private double ideologyValue;
 
-	public CorrelatedVectors(NormalDistribution signficanceValueDist, double pCorrelation, boolean highQuestValue)
+	public CorrelatedVectors(NormalDistribution signficanceValueDist, double pCorrelation, boolean violentIdeology)
 	{
 		double candidateIdeology = 0.0;
 		double candidateQuestValue = 0.0;
-		if (highQuestValue)
+		if (violentIdeology)
 		{
 			boolean suitableCorrelatedPair = false;
 			double[] randomVector = null;
