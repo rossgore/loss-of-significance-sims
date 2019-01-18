@@ -24,7 +24,9 @@ networkHomophily - The extent to which the social networks the agents are placed
 
 extremeIdeologyThreshold - The polar cutoffs to determine extreme agents with extreme ideology. For non-violent agents the extreme threshold is determined by: 0 to extremeIdeologyThreshold. For violent agents the extreme threshold is determined by: 1 to (1-extremeIdeologyThreshold).
 
-corrBetweenIdeologyAndQuestValue - The correlation extent to which an individual's ideology is extreme (close to 0 and close to 1)  and the quest value of the agent. This value can range between -1 and 1.
+corrBetweenViolentIdeologyAndQuestValue - The correlation between how extreme a violent individual's ideology is (close to 1) and their quest value. This value can range between -1 and 1.
+
+corrBetweenNonViolentIdeologyAndQuestValue - The correlation between how extreme a non-violent individual's violent is (close to 1) and their quest value. This value can range between -1 and 1.
 
 onQuestNetworkInfluence - The overall influence an agent's social network has on their ideology in a given time step when they are on a quest (their quest value is greater than their quest threshold value). This value can range between 0 and 1.
 
@@ -38,6 +40,13 @@ ifOnQuestInfluenceOfSameIdeologyAgent - The influence an agent of the same ideol
 
 ifOnQuestInfluenceOfSameIdeologyAgent - The influence an agent with a violent ideology (ideology value > 0.5) has on an agent in their social who is on a quest (their quest value is not greater than their quest threshold value). This value can range between 0 and 1.
 
+individualLossEventFrequency  - Frequency with which individual loss events occur.
+
+individualLossEventDistributionMean - mean intensity of an individual loss event when it occurs.
+
+individualLossEventDistributionSD - standard deviation of the intensity of an individual loss event when it occurs.
+
+nonLossEventQuestValueReduction - amount the quest value of a non-quest agent is reduced when s/he does not experience an individual loss event.
 
 lossEvents - a list of all collective loss events to simulate
  * each loss event is given a time stamp to indicate when it occurs and an intensity level.
