@@ -192,6 +192,71 @@ public class Simulation {
 
 		}
 	}
+	
+	public void printStats(int timeStep)
+	{
+		int numberOfNonViolentAgents=0;
+		int numberOfViolentAgents=0;
+		
+		int numberOfViolentAndExtremeAgents = 0;
+		int numberOfNonViolentAndExtremeAgents = 0;
+		
+		double averageQuestValue=0;
+		double averageIdeologyValue=0;
+		
+		double averageNonViolentQuestValue=0;
+		double averageNonViolentIdeologyValue=0;
+		
+		double averageViolentQuestValue=0;
+		double averageViolentIdeologyValue=0;
+		
+		for (int i=0; i<agents.size(); i++)
+		{
+			Agent agentI = agents.get(i);
+			averageQuestValue += agentI.getQuestForSignficanceValue();
+			averageIdeologyValue += agentI.getIdeology();
+			
+			if (agentI.isIdeologyViolent())
+			{
+				averageViolentQuestValue += agentI.getQuestForSignficanceValue();
+				averageIdeologyValue += agentI.getIdeology();
+				
+				numberOfViolentAgents++;
+				if (agentI.isExtreme())
+				{
+					numberOfViolentAndExtremeAgents++;
+				}
+			}
+			
+			if (agentI.isIdeologyNonViolent())
+			{
+				averageNonViolentQuestValue += agentI.getQuestForSignficanceValue();
+				averageNonViolentIdeologyValue += agentI.getIdeology();
+				
+				numberOfNonViolentAgents++;
+				if (agentI.isExtreme())
+				{
+					numberOfNonViolentAndExtremeAgents++;
+				}
+			}
+		}
+		
+		System.out.println(timeStep+", Number.Of.Non.Violent.Agents, "+numberOfNonViolentAgents);
+		System.out.println(timeStep+", Number.Of.Violent.Agents, "+numberOfViolentAgents);
+		
+		System.out.println(timeStep+", Number.Of.Violent.And.Extreme.Agents, "+numberOfViolentAndExtremeAgents);
+		System.out.println(timeStep+", Number.Of.Non.Violent.Extreme.Agents, "+numberOfNonViolentAndExtremeAgents);
+		
+		System.out.println(timeStep+", Average.Quest.Value, "+averageQuestValue);
+		System.out.println(timeStep+", Average.Ideology.Value, "+averageIdeologyValue);
+		
+		System.out.println(timeStep+", Average.Non.Violent.Quest.Value, "+averageNonViolentQuestValue);
+		System.out.println(timeStep+", Average.Non.Violent.Ideology.Value, "+averageNonViolentIdeologyValue);
+		
+		System.out.println(timeStep+", Average.Violent.Quest.Value, "+averageViolentQuestValue);
+		System.out.println(timeStep+", Average.Violent.Ideology.Value, "+averageViolentIdeologyValue);
+	}
+	
 	public int numberOfViolentAgents()
 	{
 		int count = 0;
