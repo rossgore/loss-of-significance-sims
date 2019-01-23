@@ -17,7 +17,7 @@ public class RunSimulationIndividual {
 		double ifOnQuestInfluenceOfViolentAgent = 1.0;
 		
 		double questValueDistributionMean = 0.5;
-		double questValueDistributionSD = 0.05;
+		double questValueDistributionSD = 0.15;
 		
 		double questThresholdDistributionMean = 0.85;
 		double questThresholdDistributionSD = 0.05;
@@ -33,7 +33,7 @@ public class RunSimulationIndividual {
 		
 		double networkHomophily = 1.0;
 		
-		double extremeIdeologyThreshold = 0.1;
+		double extremeIdeologyThreshold = 0.15;
 		
 		double individualLossEventFrequency = 0.05;
 		
